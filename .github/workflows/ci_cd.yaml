@@ -22,6 +22,9 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Run tests
+      run: |
+        pytest tests/
         
   deploy:
 
@@ -46,3 +49,29 @@ jobs:
       run: |
         echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         docker-compose push
+
+  test2:
+    needs: test
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Deploy to server
+      env:
+        HOST: ${{ secrets.HOST }}
+        USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      run: |
+        ssh $USERNAME@$HOST 'git pull'
+        # scp -r . $USERNAME@$HOST
+        ssh $USERNAME@$HOST 'docker build'
+        ssh $USERNAME@$HOST 'docker run -d -p 8080:8080 '
+    - name: Update Swagger documentation
+      env:
+        HOST: ${{ secrets.HOST }}
+        USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      run: |
+        scp -r your-swagger-files $USERNAME@$HOST:/server/swagger/docs
+        ssh $USERNAME@$HOST 'cd /server/swagger/docs && docker build -t swagger-docs .'
+        ssh $USERNAME@$HOST 'cd /server/swagger/docs && docker run -d -p 8081:8080 swagger-docs'
