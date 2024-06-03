@@ -13,7 +13,7 @@ configuration = swagger_client.Configuration()
 configuration.host = 'http://127.0.0.1:8080/api/v1'
 api_instance = swagger_client.CategoriesApi(swagger_client.ApiClient(configuration))
 
-while(True):
+for i in range(5):
     time.sleep(1)
     try:
         # Получить список всех категорий
