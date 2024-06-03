@@ -6,7 +6,7 @@ from pprint import pprint
 import logging
 
 #Логгер
-logging.basicConfig(filename="../server/var/log/temp.log", level=logging.INFO)
+logging.basicConfig(filename="../../server/var/log/temp.log", level=logging.INFO)
 
 # create an instance of the API class
 configuration = swagger_client.Configuration()
