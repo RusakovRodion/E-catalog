@@ -1,0 +1,277 @@
+openapi: 3.0.3
+info:
+  title: Проект интернет-магазина
+  version: 1.0.0
+servers:
+- url: http://localhost:8080/api/v1
+tags:
+- name: categories
+  description: categories operations
+- name: products
+  description: product operations
+- name: orders
+  description: orders operations
+paths:
+  /category:
+    get:
+      tags:
+      - categories
+      summary: Получить список всех категорий
+      operationId: category_get
+      responses:
+        "200":
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+                x-content-type: application/json
+      x-openapi-router-controller: swagger_server.controllers.categories_controller
+    post:
+      tags:
+      - categories
+      summary: Добавить новую категорию
+      operationId: category_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+        required: true
+      responses:
+        "201":
+          description: Категория успешно добавлена
+        "400":
+          description: Некорректный запрос
+      x-openapi-router-controller: swagger_server.controllers.categories_controller
+  /products:
+    get:
+      tags:
+      - products
+      summary: Получить список всех товаров
+      operationId: products_get
+      responses:
+        "200":
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+                x-content-type: application/json
+      x-openapi-router-controller: swagger_server.controllers.products_controller
+    post:
+      tags:
+      - products
+      summary: Добавить товар
+      operationId: products_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+        required: true
+      responses:
+        "201":
+          description: Товар успешно добавлен
+        "400":
+          description: Некорректный запрос
+      x-openapi-router-controller: swagger_server.controllers.products_controller
+  /products/{product_id}:
+    get:
+      tags:
+      - products
+      summary: Получить информацию о товаре по ID
+      operationId: products_product_id_get
+      parameters:
+      - name: product_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        "404":
+          description: Товар не найден
+      x-openapi-router-controller: swagger_server.controllers.products_controller
+    put:
+      tags:
+      - products
+      summary: Изменить информацию о товаре по ID
+      operationId: products_product_id_put
+      parameters:
+      - name: product_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+        required: true
+      responses:
+        "200":
+          description: Информация о товаре успешно изменена
+        "400":
+          description: Некорректный запрос
+        "404":
+          description: Товар не найден
+      x-openapi-router-controller: swagger_server.controllers.products_controller
+    delete:
+      tags:
+      - products
+      summary: Удалить товар по ID
+      operationId: products_product_id_delete
+      parameters:
+      - name: product_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "204":
+          description: Товар успешно удален
+        "404":
+          description: Товар не найден
+      x-openapi-router-controller: swagger_server.controllers.products_controller
+  /order:
+    get:
+      tags:
+      - orders
+      summary: Получить список всех заказов
+      operationId: order_get
+      responses:
+        "200":
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Order'
+                x-content-type: application/json
+      x-openapi-router-controller: swagger_server.controllers.orders_controller
+  /order/{order_id}:
+    get:
+      tags:
+      - orders
+      summary: Получить информацию о заказе по его ID
+      operationId: order_order_id_get
+      parameters:
+      - name: order_id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: Успешный запрос
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        "404":
+          description: Заказ не найден
+      x-openapi-router-controller: swagger_server.controllers.orders_controller
+  /order/create:
+    post:
+      tags:
+      - orders
+      summary: Создать заказ на товар
+      operationId: order_create_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+        required: true
+      responses:
+        "201":
+          description: Заказ успешно создан
+        "400":
+          description: Некорректный запрос
+      x-openapi-router-controller: swagger_server.controllers.orders_controller
+components:
+  schemas:
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+      example:
+        id: 1
+        name: Ноутбуки
+    Product:
+      required:
+      - category
+      - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        category:
+          type: array
+          items:
+            $ref: '#/components/schemas/Category'
+      example:
+        id: 1
+        name: Ноутбук ASUS ZenBook
+        category:
+        - id: 1
+          name: Ноутбуки
+    Order:
+      required:
+      - products
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+      example:
+        id: 1
+        products:
+        - id: 1
+          name: Ноутбук ASUS ZenBook
+          category:
+          - id: 1
+            name: Ноутбуки
+        - id: 2
+          name: Смартфон iPhone 12
+          category:
+          - id: 2
+            name: Смартфоны
+          - id: 3
+            name: Гаджеты
+
