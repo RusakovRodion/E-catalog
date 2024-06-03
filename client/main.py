@@ -10,7 +10,7 @@ logging.basicConfig(filename="../server/var/log/temp.log", level=logging.INFO)
 
 # create an instance of the API class
 configuration = swagger_client.Configuration()
-configuration.host = 'http://192.168.20.217:8080/api/v1'
+configuration.host = 'http://127.0.0.1:8080/api/v1'
 api_instance = swagger_client.CategoriesApi(swagger_client.ApiClient(configuration))
 
 while(True):
