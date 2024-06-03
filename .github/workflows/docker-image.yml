@@ -23,8 +23,8 @@ jobs:
 
     - name: Test the application
       run: |
-        docker-compose run web pytest
-        docker-compose run web flake8
+        docker-compose run app pytest
+        docker-compose run app flake8
     - name: Test the application
       run: |
         # Install dependencies
