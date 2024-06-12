@@ -80,13 +80,13 @@ services:
     restart: always
 
   victoriametrics:
-    container_name: victoriametrics
+    container_name: rusakov-victoriametrics
     image: victoriametrics/victoria-metrics:v1.94.0
     ports:
-      - "8430:8428"
-      - "8090:8089"
-      - "2004:2003"
-      - "4243:4242"
+      - "18430:8428"
+      - "18090:8089"
+      - "12004:2003"
+      - "14243:4242"
     volumes:
       - vmdata:/storage
     command:
