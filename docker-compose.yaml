@@ -3,7 +3,6 @@ version: "3.8"
 services:
   app:
       build: .
-      container_name: app
       hostname: app
       restart: unless-stopped
       ports:
@@ -63,7 +62,6 @@ services:
        - vm_net
 
   vmagent:
-    container_name: vmagent
     image: victoriametrics/vmagent:v1.94.0
     depends_on:
       - "victoriametrics"
@@ -80,7 +78,6 @@ services:
     restart: always
 
   victoriametrics:
-    container_name: rusakov-victoriametrics
     image: victoriametrics/victoria-metrics:v1.94.0
     ports:
       - "18430:8428"
@@ -100,7 +97,6 @@ services:
     restart: always
 
   grafana:
-    container_name: grafana
     image: grafana/grafana:9.2.7
     depends_on:
       - "victoriametrics"
